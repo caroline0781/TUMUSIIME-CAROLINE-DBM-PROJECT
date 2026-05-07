@@ -1,0 +1,75 @@
+-- ==========================================
+-- Salon Booking and Appointment Database
+-- ==========================================
+
+-- Create the database
+CREATE DATABASE IF NOT EXISTS SalonBookingDB;
+USE SalonBookingDB;
+
+-- ------------------------------------------
+-- 1. Customers Table
+-- ------------------------------------------
+CREATE TABLE Customers (
+    CustomerID INT AUTO_INCREMENT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Phone VARCHAR(20) NOT NULL,
+    Email VARCHAR(100),
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ------------------------------------------
+-- 2. Staff Table
+-- ------------------------------------------
+CREATE TABLE Staff (
+    StaffID INT AUTO_INCREMENT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Role VARCHAR(50) NOT NULL,
+    Phone VARCHAR(20),
+    HireDate DATE
+);
+
+-- ------------------------------------------
+-- 3. Services Table
+-- ------------------------------------------
+CREATE TABLE Services (
+    ServiceID INT AUTO_INCREMENT PRIMARY KEY,
+    ServiceName DOCX
+VARCHAR(100) NOT NULL,
+    Description TEXT,
+    Price DECIMAL(10, 2) NOT NULL,
+    DurationMinutes INT NOT NULL -- Estimated time required in minutes
+);
+
+-- ------------------------------------------
+-- 4. Appointments Table
+-- ------------------------------------------
+CREATE TABLE Appointments (
+    AppointmentID INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerID INT NOT NULL,
+    StaffID INT NOT NULL,
+    ServiceID INT NOT NULL,
+    AppointmentDate DATE NOT NULL,
+    StartTime TIME NOT NULL,
+    Status ENUM('Scheduled', 'Completed', 'Cancelled', 'No Show') DEFAULT 'Scheduled',
+    Notes TEXT,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID) ON DELETE CASCADE,
+    FOREIGN KEY (StaffID) REFERENCES Staff(StaffID) ON DELETE CASCADE,
+    FOREIGN KEY (ServiceID) REFERENCES Services(ServiceID) ON DELETE CASCADE
+);
+
+-- ------------------------------------------
+-- 5. Payments Table
+-- ------------------------------------------
+CREATE TABLE Payments (
+    PaymentID INT AUTO_INCREMENT PRIMARY KEY,
+    AppointmentID INT NOT NULL,
+    Amount DECIMAL(10, 2) NOT NULL,
+    PaymentMethod ENUM('Cash', 'Credit Card', 'Mobile Money', 'Bank Transfer') NOT NULL,
+    PaymentDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (AppointmentID) REFERENCES Appointments(AppointmentID) ON DELETE CASCADE
+);
+
+
